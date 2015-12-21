@@ -1,0 +1,17 @@
+# Compiled files
+lib
+
+# Dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+
+# node-waf configuration
+.lock-wscript
