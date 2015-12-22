@@ -20,12 +20,16 @@ With gulp-stylelint, it's easy to generate CSS lint reports based on [stylelint]
 If you already have a .stylelintrc file in your project directory:
 
 ```js
+import gulp from 'gulp';
+import gulpStylelint from 'gulp-stylelint';
+import consoleReporter from 'gulp-stylelint-console-reporter';
+
 gulp.task('lint-css', function lintCssTask() {
   return gulp
     .src('src/**/*.css')
     .pipe(gulpStylelint({
       reporters: [
-        gulpStylelintConsoleReporter()
+        consoleReporter()
       ]
     }));
 });
@@ -36,6 +40,10 @@ gulp.task('lint-css', function lintCssTask() {
 Below is an example with all available options provided:
 
 ```js
+import gulp from 'gulp';
+import gulpStylelint from 'gulp-stylelint';
+import consoleReporter from 'gulp-stylelint-console-reporter';
+
 gulp.task('lint-css', function lintCssTask() {
   return gulp
     .src('src/**/*.css')
@@ -44,7 +52,7 @@ gulp.task('lint-css', function lintCssTask() {
         extends: 'stylelint-config-suitcss'
       },
       reporters: [
-        gulpStylelintConsoleReporter()
+        consoleReporter()
       ],
       debug: true
     }));
@@ -91,6 +99,7 @@ export default function customReporterInit(options = {}) {
 // css-lint-task.js
 // --------------------
 
+import gulp from 'gulp';
 import gulpStylelint from 'gulp-stylelint';
 import customReporter from './gulp-stylelint-custom-reporter';
 
