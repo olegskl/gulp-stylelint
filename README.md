@@ -63,6 +63,48 @@ List of reporters. The order of execution is sequential.
 
 When set to `true`, the error handler will print stack trace of errors.
 
+## Writing reporters
+
+A gulp-stylelint reporter is an asynchronous function that takes the stylelint results array and outputs a report of some kind (logs to console, writes to a file, ...). The resolved result is not used.
+
+Below is an example of a reporter that logs the number processed files after a preconfigured delay.
+
+```js
+//
+// gulp-stylelint-custom-reporter.js
+// --------------------
+
+export default function customReporterInit(options = {}) {
+
+  return function customReporter(results) {
+    return new Promise(resolve => {
+      setTimeout(function () {
+        console.log(`${results.length} files have been processed`);
+        resolve();
+      }, options.delay);
+    })
+  };
+
+}
+
+//
+// css-lint-task.js
+// --------------------
+
+import gulpStylelint from 'gulp-stylelint';
+import customReporter from './gulp-stylelint-custom-reporter';
+
+gulp.task('lint-css', function lintCssTask() {
+  return gulp
+    .src('src/**/*.css')
+    .pipe(gulpStylelint({
+      reporters: [
+        customReporter({delay: 1337})
+      ]
+    }));
+});
+```
+
 ## License
 
 http://opensource.org/licenses/mit-license.html
