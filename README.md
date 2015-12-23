@@ -35,6 +35,14 @@ gulp.task('lint-css', function lintCssTask() {
 });
 ```
 
+## Reporters
+
+Here's the list of currently available reporters:
+
+ - [gulp-stylelint-console-reporter](https://github.com/olegskl/gulp-stylelint-console-reporter)
+ - [gulp-stylelint-checkstyle-reporter](https://github.com/olegskl/gulp-stylelint-checkstyle-reporter)
+ - [gulp-stylelint-fail-reporter](https://github.com/olegskl/gulp-stylelint-fail-reporter)
+
 ## Options
 
 Below is an example with all available options provided:
