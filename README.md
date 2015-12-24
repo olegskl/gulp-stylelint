@@ -35,6 +35,12 @@ gulp.task('lint-css', function lintCssTask() {
 });
 ```
 
+Note that if you're using ES5, you will have to access the library via the `default` property due to [the way exports are handled in Babel 6](https://phabricator.babeljs.io/T2212):
+
+```js
+var gulpStylelint = require('gulp-stylelint').default;
+```
+
 ## Reporters
 
 Here's the list of currently available reporters:
