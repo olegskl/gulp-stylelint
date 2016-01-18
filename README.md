@@ -130,4 +130,4 @@ gulp.task('lint-css', function lintCssTask() {
 
 ## License
 
-http://opensource.org/licenses/mit-license.html
+**gulp-stylelint** is Copyright (c) 2016 [Oleg Sklyanchuk](http://olegskl.com) and licensed under the MIT license. See the included LICENSE file for more details.
