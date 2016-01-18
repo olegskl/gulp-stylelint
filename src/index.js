@@ -77,7 +77,7 @@ export default function gulpStylelint(options = {}) {
   }
 
   /**
-   * Resolves accumulated promises and writes report to file system.
+   * Resolves promises and provides accumulated report to reporters.
    * @param  {Function}  done Done callback.
    * @return {undefined}      Nothing is returned (done callback is used instead).
    */
