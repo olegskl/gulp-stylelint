@@ -1,6 +1,6 @@
 {
   "name": "gulp-stylelint",
-  "version": "0.0.4",
+  "version": "0.1.0",
   "description": "Gulp plugin for running Stylelint results through various reporters.",
   "main": "lib/index.js",
   "scripts": {
