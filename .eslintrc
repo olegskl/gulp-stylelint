@@ -1,4 +1,4 @@
 {
-  "extends": "meetic",
-  "parser": "babel-eslint"
+  "parser": "babel-eslint",
+  "extends": "meetic"
 }

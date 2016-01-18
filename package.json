@@ -4,7 +4,9 @@
   "description": "Gulp plugin for running Stylelint results through various reporters.",
   "main": "lib/index.js",
   "scripts": {
-    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib"
+    "lint": "eslint src/**/*.js",
+    "prepublish": "node_modules/babel-cli/bin/babel.js src --out-dir lib",
+    "test": "npm run lint"
   },
   "repository": {
     "type": "git",
