@@ -26,7 +26,6 @@
   "homepage": "https://github.com/olegskl/gulp-stylelint",
   "dependencies": {
     "gulp-util": "^3.0.7",
-    "postcss": "^5.0.14",
     "stylelint": "^4.0.0",
     "through2": "^2.0.0"
   },

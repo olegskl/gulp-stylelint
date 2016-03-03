@@ -3,8 +3,7 @@
  * @module gulp-stylelint
  */
 
-import postcss from 'postcss';
-import stylelint from 'stylelint';
+import {lint} from 'stylelint';
 import gulpUtil from 'gulp-util';
 import through from 'through2';
 
@@ -24,7 +23,6 @@ const pluginName = 'gulp-stylelint';
  */
 export default function gulpStylelint(options = {}) {
   const promiseList = [];
-  const postcssProcessor = postcss([stylelint(options.stylelint)]);
 
   /**
    * Launches processing of a given file and adds it to the promise list.
@@ -47,10 +45,11 @@ export default function gulpStylelint(options = {}) {
       return done(new gulpUtil.PluginError(pluginName, 'Streaming not supported'));
     }
 
-    const fileContents = file.contents.toString();
-    const promise = postcssProcessor.process(fileContents, {from: file.path});
-
-    promiseList.push(promise);
+    promiseList.push(lint({
+      code: file.contents.toString(),
+      codeFilename: file.path,
+      config: options.stylelint
+    }));
 
     done(null, file);
   }
