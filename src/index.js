@@ -45,11 +45,28 @@ export default function gulpStylelint(options = {}) {
       return done(new gulpUtil.PluginError(pluginName, 'Streaming not supported'));
     }
 
-    promiseList.push(lint({
+    // Override code and codeFilename with our own data:
+    const linterOptions = Object.assign({}, options, {
       code: file.contents.toString(),
-      codeFilename: file.path,
-      config: options.stylelint
-    }));
+      codeFilename: file.path
+    });
+
+    // Backwards compatibility with 0.2.0:
+    if (linterOptions.hasOwnProperty('stylelint') &&
+        !linterOptions.hasOwnProperty('config')) {
+      linterOptions.config = linterOptions.stylelint;
+      delete linterOptions.stylelint;
+    }
+
+    // Delete the options that cannot be used here:
+    delete linterOptions.files;
+    delete linterOptions.formatter;
+
+    // Delete the options not related to stylelint:
+    delete linterOptions.reporters;
+    delete linterOptions.debug;
+
+    promiseList.push(lint(linterOptions));
 
     done(null, file);
   }

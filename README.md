@@ -62,7 +62,7 @@ gulp.task('lint-css', function lintCssTask() {
   return gulp
     .src('src/**/*.css')
     .pipe(gulpStylelint({
-      stylelint: {
+      config: {
         extends: 'stylelint-config-suitcss'
       },
       reporters: [
@@ -73,7 +73,7 @@ gulp.task('lint-css', function lintCssTask() {
 });
 ```
 
-#### `stylelint` [Object]
+#### `config` [Object]
 
 See [stylelint configuration](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/configuration.md) options. When omitted, the configuration is taken from the .stylelintrc file.
 
