@@ -3,8 +3,7 @@
  * @module gulp-stylelint
  */
 
-import postcss from 'postcss';
-import stylelint from 'stylelint';
+import {lint} from 'stylelint';
 import gulpUtil from 'gulp-util';
 import through from 'through2';
 
@@ -24,7 +23,6 @@ const pluginName = 'gulp-stylelint';
  */
 export default function gulpStylelint(options = {}) {
   const promiseList = [];
-  const postcssProcessor = postcss([stylelint(options.stylelint)]);
 
   /**
    * Launches processing of a given file and adds it to the promise list.
@@ -47,10 +45,28 @@ export default function gulpStylelint(options = {}) {
       return done(new gulpUtil.PluginError(pluginName, 'Streaming not supported'));
     }
 
-    const fileContents = file.contents.toString();
-    const promise = postcssProcessor.process(fileContents, {from: file.path});
+    // Override code and codeFilename with our own data:
+    const linterOptions = Object.assign({}, options, {
+      code: file.contents.toString(),
+      codeFilename: file.path
+    });
 
-    promiseList.push(promise);
+    // Backwards compatibility with 0.2.0:
+    if (linterOptions.hasOwnProperty('stylelint') &&
+        !linterOptions.hasOwnProperty('config')) {
+      linterOptions.config = linterOptions.stylelint;
+      delete linterOptions.stylelint;
+    }
+
+    // Delete the options that cannot be used here:
+    delete linterOptions.files;
+    delete linterOptions.formatter;
+
+    // Delete the options not related to stylelint:
+    delete linterOptions.reporters;
+    delete linterOptions.debug;
+
+    promiseList.push(lint(linterOptions));
 
     done(null, file);
   }
