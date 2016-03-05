@@ -2,10 +2,9 @@
 
 [![NPM version](http://img.shields.io/npm/v/gulp-stylelint.svg)](https://www.npmjs.org/package/gulp-stylelint)
 [![Build Status](https://travis-ci.org/olegskl/gulp-stylelint.svg?branch=master)](https://travis-ci.org/olegskl/gulp-stylelint)
-[![Code Climate](https://codeclimate.com/github/olegskl/gulp-stylelint/badges/gpa.svg)](https://codeclimate.com/github/olegskl/gulp-stylelint)
 [![Join the chat at https://gitter.im/olegskl/gulp-stylelint](https://badges.gitter.im/olegskl/gulp-stylelint.svg)](https://gitter.im/olegskl/gulp-stylelint?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-A [Gulp](http://gulpjs.com/) plugin that runs [stylelint](https://github.com/stylelint/stylelint) results through a list of provided reporters.
+A [Gulp](http://gulpjs.com/) plugin that runs [stylelint](https://github.com/stylelint/stylelint) results through a list of reporters.
 
 ## Installation
 
@@ -15,21 +14,21 @@ npm install gulp-stylelint --save-dev
 
 ## Quick start
 
-With gulp-stylelint, it's easy to generate CSS lint reports based on [stylelint](https://github.com/stylelint/stylelint) results.
+With gulp-stylelint, it's easy to generate CSS lint reports based on stylelint results.
 
-If you already have a .stylelintrc file in your project directory:
+Once you have [configured stylelint](http://stylelint.io/user-guide/configuration/) (e.g. you have a *.stylelintrc* file), start with the following code. You will find additional configuration [options](#options) below.
 
 ```js
 import gulp from 'gulp';
 import gulpStylelint from 'gulp-stylelint';
-import consoleReporter from 'gulp-stylelint-console-reporter';
+import stylelintTextFormatter from 'stylelint-text-formatter';
 
 gulp.task('lint-css', function lintCssTask() {
   return gulp
     .src('src/**/*.css')
     .pipe(gulpStylelint({
       reporters: [
-        consoleReporter()
+        {formatter: 'string', console: true}
       ]
     }));
 });
@@ -41,13 +40,14 @@ Note that if you're using ES5, you will have to access the library via the `defa
 var gulpStylelint = require('gulp-stylelint').default;
 ```
 
-## Reporters
+## Formatters
 
-Here's the list of currently available reporters:
+Below is the list of currently available stylelint formatters. Some of them are bundled with stylelint by default and exposed on `gulpStylelint.formatters`. Others need to be installed. You can [write a custom formatter](http://stylelint.io/developer-guide/formatters/) to tailor the reporting to your needs.
 
- - [gulp-stylelint-console-reporter](https://github.com/olegskl/gulp-stylelint-console-reporter)
- - [gulp-stylelint-checkstyle-reporter](https://github.com/olegskl/gulp-stylelint-checkstyle-reporter)
- - [gulp-stylelint-fail-reporter](https://github.com/olegskl/gulp-stylelint-fail-reporter)
+ - `"string"` (same as `gulpStylelint.formatters.string`) – bundled with stylelint
+ - `"verbose"` (same as `gulpStylelint.formatters.verbose`) – bundled with stylelint
+ - `"json"` (same as `gulpStylelint.formatters.json`) – bundled with stylelint
+ -  [stylelint-checkstyle-formatter](https://github.com/davidtheclark/stylelint-checkstyle-formatter) – requires installation
 
 ## Options
 
@@ -56,78 +56,56 @@ Below is an example with all available options provided:
 ```js
 import gulp from 'gulp';
 import gulpStylelint from 'gulp-stylelint';
-import consoleReporter from 'gulp-stylelint-console-reporter';
+import myStylelintFormatter from 'my-stylelint-formatters';
 
 gulp.task('lint-css', function lintCssTask() {
   return gulp
     .src('src/**/*.css')
     .pipe(gulpStylelint({
-      stylelint: {
-        extends: 'stylelint-config-suitcss'
-      },
+      failAfterError: true,
+      reportOutputDir: 'reports/lint',
       reporters: [
-        consoleReporter()
+        {formatter: 'verbose', console: true},
+        {formatter: 'json', save: 'report.json'},
+        {formatter: myStylelintFormatter, save: 'my-custom-report.txt'}
       ],
       debug: true
     }));
 });
 ```
 
-#### `stylelint` [Object]
+#### `failAfterError`
 
-See [stylelint configuration](https://github.com/stylelint/stylelint/blob/master/docs/user-guide/configuration.md) options. When omitted, the configuration is taken from the .stylelintrc file.
+When set to `true`, the process will end with non-zero error code if any error-level warnings were raised. Defaults to `true`.
 
-#### `reporters` [Array<Function>] default: `[]`
+#### `reportOutputDir`
 
-List of reporters. The order of execution is sequential.
+Base directory for lint results written to filesystem. Defaults to current working directory.
 
-#### `debug` [Boolean] default: `false`
+#### `reporters`
 
-When set to `true`, the error handler will print stack trace of errors.
-
-## Writing reporters
-
-A gulp-stylelint reporter is an asynchronous function that takes the stylelint results array and outputs a report of some kind (logs to console, writes to a file, ...). The resolved result is not used.
-
-Below is an example of a reporter that logs the number processed files after a preconfigured delay.
+List of reporter configuration objects (see below). Defaults to an empty array.
 
 ```js
-//
-// gulp-stylelint-custom-reporter.js
-// --------------------
+{
+  // stylelint results formatter:
+  // - pass a function for imported, custom or exposed formatters
+  // - pass a string ("string", "verbose", "json") for formatters
+  //   bundled with stylelint by default
+  formatter: myFormatter,
 
-export default function customReporterInit(options = {}) {
+  // save the formatted result to a file:
+  save: 'text-report.txt',
 
-  return function customReporter(results) {
-    return new Promise(resolve => {
-      setTimeout(function () {
-        console.log(`${results.length} files have been processed`);
-        resolve();
-      }, options.delay);
-    })
-  };
-
+  // log the formatted result to console:
+  console: true
 }
-
-//
-// css-lint-task.js
-// --------------------
-
-import gulp from 'gulp';
-import gulpStylelint from 'gulp-stylelint';
-import customReporter from './gulp-stylelint-custom-reporter';
-
-gulp.task('lint-css', function lintCssTask() {
-  return gulp
-    .src('src/**/*.css')
-    .pipe(gulpStylelint({
-      reporters: [
-        customReporter({delay: 1337})
-      ]
-    }));
-});
 ```
+
+#### `debug`
+
+When set to `true`, the error handler will print an error stack trace. Defaults to `false`.
 
 ## License
 
-**gulp-stylelint** is Copyright (c) 2016 [Oleg Sklyanchuk](http://olegskl.com) and licensed under the MIT license. See the included LICENSE file for more details.
+[MIT License](http://opensource.org/licenses/MIT)

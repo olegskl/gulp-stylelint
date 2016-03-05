@@ -3,10 +3,12 @@
  * @module gulp-stylelint
  */
 
-import postcss from 'postcss';
-import stylelint from 'stylelint';
+import {lint} from 'stylelint';
 import gulpUtil from 'gulp-util';
 import through from 'through2';
+import Promise from 'promise';
+import * as formatters from 'stylelint/dist/formatters';
+import reporterFactory from './reporter-factory';
 
 /**
  * Name of this plugin for reporting purposes.
@@ -16,90 +18,124 @@ const pluginName = 'gulp-stylelint';
 
 /**
  * Stylelint results processor.
- * @param  {Object}          [options]           Plugin options.
- * @param  {Object}          [options.stylelint] Stylelint options (omit to use .stylelintrc).
- * @param  {Array<Function>} [options.reporters] List of reporters with sequential execution.
- * @param  {Boolean}         [options.debug]     If set to true, error stack trace will be printed.
- * @return {Stream}                              Object stream usable in Gulp pipes.
+ * @param {Object} [options] - Plugin options.
+ * @param {String} [options.reportOutputDir] - Common path for all reporters.
+ * @param {[Object]} [options.reporters] - Reporter configurations.
+ * @param {Boolean} [options.debug] - If true, error stack will be printed.
+ * @return {Stream} Object stream usable in Gulp pipes.
  */
 export default function gulpStylelint(options = {}) {
-  const promiseList = [];
-  const postcssProcessor = postcss([stylelint(options.stylelint)]);
 
   /**
-   * Launches processing of a given file and adds it to the promise list.
+   * List of gulp-stylelint reporters.
+   * @type [Function]
+   */
+  const reporters = (options.reporters || [])
+    .map(config => reporterFactory(config, options));
+
+  /**
+   * List of stylelint's lint result promises.
+   * @type [Promise]
+   */
+  const lintPromiseList = [];
+
+  /**
+   * Lint options for stylelint's `lint` function.
+   * @type Object
+   */
+  const lintOptions = Object.assign({
+    failAfterError: true,
+    debug: false
+  }, options);
+
+  // Remove the stylelint options that cannot be used:
+  delete lintOptions.files; // css code will be provided by gulp
+  delete lintOptions.formatter; // formatters are defined in the `reporters` option
+
+  // Remove gulp-stylelint options:
+  delete lintOptions.reportOutputDir;
+  delete lintOptions.reporters;
+  delete lintOptions.debug;
+
+  /**
+   * Launches linting of a given file, pushes promises to the promise list.
    *
    * Note that the files are not modified and are pushed
    * back to their pipes to allow usage of other plugins.
    *
-   * @param  {File}      file      Piped file.
-   * @param  {String}    encoding  File encoding.
-   * @param  {Function}  done      Done callback.
-   * @return {undefined}           Nothing is returned (done callback is used instead).
+   * @param {File} file - Piped file.
+   * @param {String} encoding - File encoding.
+   * @param {Function} done - File pipe completion callback.
+   * @return {undefined} Nothing is returned (done callback is used instead).
    */
   function onFile(file, encoding, done) {
 
     if (file.isNull()) {
-      return done(null, file);
+      done(null, file);
+      return;
     }
 
     if (file.isStream()) {
-      return done(new gulpUtil.PluginError(pluginName, 'Streaming not supported'));
+      done(new gulpUtil.PluginError(pluginName, 'Streaming is not supported'));
+      return;
     }
 
-    const fileContents = file.contents.toString();
-    const promise = postcssProcessor.process(fileContents, {from: file.path});
+    const localLintOptions = Object.assign({}, lintOptions, {
+      code: file.contents.toString(),
+      codeFilename: file.path
+    });
 
-    promiseList.push(promise);
+    lintPromiseList.push(lint(localLintOptions));
 
     done(null, file);
   }
 
   /**
-   * Provides Stylelint results to reporters and awaits their response.
-   * @param  {Array<Object>} results List of results in Stylelint format.
-   * @return {Promise}               Accumulated result of reporters execution.
+   * Provides Stylelint result to reporters.
+   * @param {[Object]} lintResults - Stylelint results.
+   * @return {Promise} Resolved with original lint results.
    */
-  function provideResultsToReporters(results) {
-
-    /**
-     * Reducer for sequential execution of reporters.
-     * @param  {Promise}  promise  Accumulated promise (initial value in reducer).
-     * @param  {Function} reporter Reporter function.
-     * @return {Promise}           Reporter execution promise.
-     */
-    function reporterListReducer(promise, reporter) {
-      return promise.then(() => reporter(results));
-    }
-
-    return (options.reporters || [])
-      .reduce(reporterListReducer, Promise.resolve());
+  function passLintResultsThroughReporters(lintResults) {
+    const warnings = lintResults
+      .reduce((accumulated, res) => accumulated.concat(res.results), []);
+    return Promise
+      .all(reporters.map(reporter => reporter(warnings)))
+      .then(() => lintResults);
   }
 
   /**
    * Resolves promises and provides accumulated report to reporters.
-   * @param  {Function}  done Done callback.
-   * @return {undefined}      Nothing is returned (done callback is used instead).
+   * @param {Function} done - Stream completion callback.
+   * @return {undefined} Nothing is returned (done callback is used instead).
    */
   function onStreamEnd(done) {
     Promise
-      .all(promiseList)
-      .then(provideResultsToReporters)
-      .then(() => done())
-      .catch(error => {
-        // For some reason we need to wrap `emit` in a try-catch block
-        // because it immediately throws the given error and the `done`
-        // callback is never called as a result.
-        try {
-          this.emit('error', new gulpUtil.PluginError(pluginName, error, {
-            showStack: !!options.debug
-          }));
-        } catch (e) {
-          // ¯\_(シ)_/¯
+      .all(lintPromiseList)
+      .then(passLintResultsThroughReporters)
+      .then(lintResults => {
+        if (options.failAfterError && lintResults.some(result => result.errored)) {
+          done(new gulpUtil.PluginError(pluginName, 'Errors were found while linting code.'));
+        } else {
+          done();
         }
-        done();
+      })
+      .catch(error => {
+        done(new gulpUtil.PluginError(pluginName, error, {
+          showStack: !!options.debug
+        }));
       });
   }
 
   return through.obj(onFile, onStreamEnd);
 }
+
+/**
+ * Formatters bundled with stylelint by default.
+ *
+ * User may want to see the list of available formatters,
+ * proxy them or pass them as functions instead of strings.
+ *
+ * @see https://github.com/olegskl/gulp-stylelint/issues/3#issuecomment-197025044
+ * @type {Object}
+ */
+gulpStylelint.formatters = formatters;
