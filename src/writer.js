@@ -1,3 +1,8 @@
+/**
+ * Gulp stylelint writer.
+ * @module gulp-stylelint/writer
+ */
+
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
