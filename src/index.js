@@ -49,10 +49,10 @@ export default function gulpStylelint(options = {}) {
   }, options);
 
   // Remove the stylelint options that cannot be used:
-  delete lintOptions.files; // css code will be provided by gulp
+  delete lintOptions.files; // css code will be provided by gulp instead
   delete lintOptions.formatter; // formatters are defined in the `reporters` option
 
-  // Remove gulp-stylelint options:
+  // Remove gulp-stylelint options so that they don't interfere with stylelint options:
   delete lintOptions.reportOutputDir;
   delete lintOptions.reporters;
   delete lintOptions.debug;

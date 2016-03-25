@@ -1,3 +1,8 @@
+/**
+ * Gulp stylelint reporter factory.
+ * @module gulp-stylelint/reporter-factory
+ */
+
 import gulpUtil from 'gulp-util';
 import * as formatters from 'stylelint/dist/formatters';
 import writer from './writer';

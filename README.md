@@ -21,7 +21,6 @@ Once you have [configured stylelint](http://stylelint.io/user-guide/configuratio
 ```js
 import gulp from 'gulp';
 import gulpStylelint from 'gulp-stylelint';
-import stylelintTextFormatter from 'stylelint-text-formatter';
 
 gulp.task('lint-css', function lintCssTask() {
   return gulp
@@ -88,16 +87,15 @@ List of reporter configuration objects (see below). Defaults to an empty array.
 
 ```js
 {
-  // stylelint results formatter:
+  // stylelint results formatter (required):
   // - pass a function for imported, custom or exposed formatters
-  // - pass a string ("string", "verbose", "json") for formatters
-  //   bundled with stylelint by default
+  // - pass a string ("string", "verbose", "json") for formatters bundled with stylelint
   formatter: myFormatter,
 
-  // save the formatted result to a file:
+  // save the formatted result to a file (optional):
   save: 'text-report.txt',
 
-  // log the formatted result to console:
+  // log the formatted result to console (optional):
   console: true
 }
 ```
