@@ -7,10 +7,10 @@ import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
 import {stripColor} from 'chalk';
-import Promise from 'promise';
+import {denodeify} from 'promise';
 
-const mkdir = Promise.denodeify(mkdirp);
-const writeFile = Promise.denodeify(fs.writeFile);
+const mkdir = denodeify(mkdirp);
+const writeFile = denodeify(fs.writeFile);
 
 /**
  * Creates the output folder and writes formatted text to a file.
