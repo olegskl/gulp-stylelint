@@ -5,17 +5,19 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import writer from '../src/writer';
+import {stub} from 'sinon';
+
+const tmpDir = path.resolve(__dirname, '../tmp');
 
 test('writer should write to cwd if base dir is not specified', t => {
-  const cwd = process.cwd();
-  const reportDirPath = path.join(cwd);
-  const reportFilePath = path.join(reportDirPath, 'foo.txt');
+  stub(process, 'cwd').returns(tmpDir);
+  const reportFilePath = path.join(process.cwd(), 'foo.txt');
 
   t.plan(2);
 
   writer('footext', 'foo.txt')
     .then(() => {
-      t.ok(
+      t.true(
         fs.statSync(reportFilePath).isFile(),
         'report file has been created in the current working directory'
       );
@@ -24,24 +26,24 @@ test('writer should write to cwd if base dir is not specified', t => {
         'footext',
         'report file has correct contents'
       );
-      fs.unlinkSync(reportFilePath);
     })
-    .catch(e => {
-      t.fail(`failed to create report file: ${e.message}`);
+    .catch(e => t.fail(`failed to create report file: ${e.message}`))
+    .finally(() => {
+      process.cwd.restore();
       fs.unlinkSync(reportFilePath);
     });
 });
 
 test('writer should write to a base folder if it is specified', t => {
-  const cwd = process.cwd();
-  const reportDirPath = path.join(cwd, 'foodir');
+  stub(process, 'cwd').returns(tmpDir);
+  const reportDirPath = path.join(process.cwd(), 'foodir');
   const reportFilePath = path.join(reportDirPath, 'foo.txt');
 
   t.plan(2);
 
   writer('footext', 'foo.txt', 'foodir')
     .then(() => {
-      t.ok(
+      t.true(
         fs.statSync(reportFilePath).isFile(),
         'report file has been created in the specified base folder'
       );
@@ -50,20 +52,18 @@ test('writer should write to a base folder if it is specified', t => {
         'footext',
         'report file has correct contents'
       );
-      fs.unlinkSync(reportFilePath);
-      fs.rmdirSync(reportDirPath);
     })
-    .catch(e => {
-      t.fail(`failed to create report file: ${e.message}`);
+    .catch(e => t.fail(`failed to create report file: ${e.message}`))
+    .finally(() => {
+      process.cwd.restore();
       fs.unlinkSync(reportFilePath);
       fs.rmdirSync(reportDirPath);
     });
 });
 
 test('writer should strip chalk colors from formatted output', t => {
-  const cwd = process.cwd();
-  const reportDirPath = path.join(cwd);
-  const reportFilePath = path.join(reportDirPath, 'foo.txt');
+  stub(process, 'cwd').returns(tmpDir);
+  const reportFilePath = path.join(process.cwd(), 'foo.txt');
 
   t.plan(1);
 
@@ -74,10 +74,10 @@ test('writer should strip chalk colors from formatted output', t => {
         'footext',
         'chalk colors have been stripped in report file'
       );
-      fs.unlinkSync(reportFilePath);
     })
-    .catch(e => {
-      t.fail(`failed to create report file: ${e.message}`);
+    .catch(e => t.fail(`failed to create report file: ${e.message}`))
+    .finally(() => {
+      process.cwd.restore();
       fs.unlinkSync(reportFilePath);
     });
 });

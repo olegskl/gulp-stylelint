@@ -8,6 +8,9 @@ node_modules
 logs
 *.log
 
+# Temporary files
+tmp
+
 # Runtime data
 pids
 *.pid
