@@ -24,7 +24,7 @@ const pluginName = 'gulp-stylelint';
  * @param {Boolean} [options.debug] - If true, error stack will be printed.
  * @return {Stream} Object stream usable in Gulp pipes.
  */
-export default function gulpStylelint(options = {}) {
+module.exports = function gulpStylelint(options = {}) {
 
   /**
    * List of gulp-stylelint reporters.
@@ -127,7 +127,7 @@ export default function gulpStylelint(options = {}) {
   }
 
   return through.obj(onFile, onStreamEnd);
-}
+};
 
 /**
  * Formatters bundled with stylelint by default.
@@ -138,4 +138,4 @@ export default function gulpStylelint(options = {}) {
  * @see https://github.com/olegskl/gulp-stylelint/issues/3#issuecomment-197025044
  * @type {Object}
  */
-gulpStylelint.formatters = formatters;
+module.exports.formatters = formatters;

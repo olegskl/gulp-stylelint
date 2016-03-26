@@ -19,10 +19,10 @@ With gulp-stylelint, it's easy to generate CSS lint reports based on stylelint r
 Once you have [configured stylelint](http://stylelint.io/user-guide/configuration/) (e.g. you have a *.stylelintrc* file), start with the following code. You will find additional configuration [options](#options) below.
 
 ```js
-import gulp from 'gulp';
-import gulpStylelint from 'gulp-stylelint';
-
 gulp.task('lint-css', function lintCssTask() {
+  const gulp = require('gulp');
+  const gulpStylelint = require('gulp-stylelint');
+
   return gulp
     .src('src/**/*.css')
     .pipe(gulpStylelint({
@@ -31,12 +31,6 @@ gulp.task('lint-css', function lintCssTask() {
       ]
     }));
 });
-```
-
-Note that if you're using ES5, you will have to access the library via the `default` property due to [the way exports are handled in Babel 6](https://phabricator.babeljs.io/T2212):
-
-```js
-var gulpStylelint = require('gulp-stylelint').default;
 ```
 
 ## Formatters
@@ -53,11 +47,11 @@ Below is the list of currently available stylelint formatters. Some of them are 
 Below is an example with all available options provided:
 
 ```js
-import gulp from 'gulp';
-import gulpStylelint from 'gulp-stylelint';
-import myStylelintFormatter from 'my-stylelint-formatters';
-
 gulp.task('lint-css', function lintCssTask() {
+  const gulp = require('gulp');
+  const gulpStylelint = require('gulp-stylelint');
+  const myStylelintFormatter = require('my-stylelint-formatter');
+
   return gulp
     .src('src/**/*.css')
     .pipe(gulpStylelint({
