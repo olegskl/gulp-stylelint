@@ -33,12 +33,6 @@ gulp.task('lint-css', function lintCssTask() {
 });
 ```
 
-Note that if you're using ES5, you will have to access the library via the `default` property due to [the way exports are handled in Babel 6](https://phabricator.babeljs.io/T2212):
-
-```js
-var gulpStylelint = require('gulp-stylelint').default;
-```
-
 ## Formatters
 
 Below is the list of currently available stylelint formatters. Some of them are bundled with stylelint by default and exposed on `gulpStylelint.formatters`. Others need to be installed. You can [write a custom formatter](http://stylelint.io/developer-guide/formatters/) to tailor the reporting to your needs.
