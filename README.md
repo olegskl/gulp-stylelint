@@ -14,8 +14,6 @@ npm install gulp-stylelint --save-dev
 
 ## Quick start
 
-With gulp-stylelint, it's easy to generate CSS lint reports based on stylelint results.
-
 Once you have [configured stylelint](http://stylelint.io/user-guide/configuration/) (e.g. you have a *.stylelintrc* file), start with the following code. You will find additional configuration [options](#options) below.
 
 ```js
@@ -35,7 +33,7 @@ gulp.task('lint-css', function lintCssTask() {
 
 ## Formatters
 
-Below is the list of currently available stylelint formatters. Some of them are bundled with stylelint by default and exposed on `gulpStylelint.formatters`. Others need to be installed. You can [write a custom formatter](http://stylelint.io/developer-guide/formatters/) to tailor the reporting to your needs.
+Below is the list of currently available stylelint formatters. Some of them are bundled with stylelint by default and exposed on `gulpStylelint.formatters` object. Others need to be installed. You can [write a custom formatter](http://stylelint.io/developer-guide/formatters/) to tailor the reporting to your needs.
 
  - `"string"` (same as `gulpStylelint.formatters.string`) – bundled with stylelint
  - `"verbose"` (same as `gulpStylelint.formatters.verbose`) – bundled with stylelint
@@ -44,7 +42,7 @@ Below is the list of currently available stylelint formatters. Some of them are 
 
 ## Options
 
-Below is an example with all available options provided:
+gulp-stylelint supports all [stylelint options](http://stylelint.io/user-guide/node-api/#options) except [`files`](http://stylelint.io/user-guide/node-api/#files) and [`formatter`](http://stylelint.io/user-guide/node-api/#formatter) and accepts a custom set of options listed below:
 
 ```js
 gulp.task('lint-css', function lintCssTask() {
