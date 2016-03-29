@@ -26,7 +26,7 @@
   },
   "homepage": "https://github.com/olegskl/gulp-stylelint",
   "dependencies": {
-    "chalk": "^1.1.1",
+    "chalk": "^1.1.3",
     "gulp-util": "^3.0.7",
     "mkdirp": "^0.5.1",
     "promise": "^7.1.1",
@@ -38,7 +38,7 @@
     "babel-core": "^6.7.4",
     "babel-preset-es2015": "^6.3.13",
     "babel-tape-runner": "^2.0.0",
-    "eslint": "^2.5.1",
+    "eslint": "^2.5.3",
     "eslint-config-meetic": "^2.0.0",
     "gulp": "^3.9.1",
     "sinon": "^1.17.3",
