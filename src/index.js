@@ -4,7 +4,7 @@
  */
 
 import {lint} from 'stylelint';
-import gulpUtil from 'gulp-util';
+import {PluginError} from 'gulp-util';
 import through from 'through2';
 import Promise from 'promise';
 import deepExtend from 'deep-extend';
@@ -25,29 +25,35 @@ const pluginName = 'gulp-stylelint';
  * @param {Boolean} [options.debug] - If true, error stack will be printed.
  * @return {Stream} Object stream usable in Gulp pipes.
  */
-module.exports = function gulpStylelint(options = {}) {
+module.exports = function gulpStylelint(options) {
+
+  /**
+   * Plugin options with defaults applied.
+   * @type Object
+   */
+  const pluginOptions = deepExtend({
+    failAfterError: true,
+    debug: false
+  }, options);
+
+  /**
+   * Lint options for stylelint's `lint` function.
+   * @type Object
+   */
+  const lintOptions = deepExtend({}, options);
 
   /**
    * List of gulp-stylelint reporters.
    * @type [Function]
    */
-  const reporters = (options.reporters || [])
-    .map(config => reporterFactory(config, options));
+  const reporters = (pluginOptions.reporters || [])
+    .map(config => reporterFactory(config, pluginOptions));
 
   /**
    * List of stylelint's lint result promises.
    * @type [Promise]
    */
   const lintPromiseList = [];
-
-  /**
-   * Lint options for stylelint's `lint` function.
-   * @type Object
-   */
-  const lintOptions = deepExtend({
-    failAfterError: true,
-    debug: false
-  }, options);
 
   // Remove the stylelint options that cannot be used:
   delete lintOptions.files; // css code will be provided by gulp instead
@@ -77,7 +83,8 @@ module.exports = function gulpStylelint(options = {}) {
     }
 
     if (file.isStream()) {
-      done(new gulpUtil.PluginError(pluginName, 'Streaming is not supported'));
+      this.emit('error', new PluginError(pluginName, 'Streaming is not supported'));
+      done();
       return;
     }
 
@@ -114,16 +121,21 @@ module.exports = function gulpStylelint(options = {}) {
       .all(lintPromiseList)
       .then(passLintResultsThroughReporters)
       .then(lintResults => {
-        if (options.failAfterError && lintResults.some(result => result.errored)) {
-          done(new gulpUtil.PluginError(pluginName, 'Errors were found while linting code.'));
-        } else {
+        process.nextTick(() => {
+          if (pluginOptions.failAfterError && lintResults.some(result => result.errored)) {
+            const errorMessage = 'Errors were found while linting code.';
+            this.emit('error', new PluginError(pluginName, errorMessage));
+          }
           done();
-        }
+        });
       })
       .catch(error => {
-        done(new gulpUtil.PluginError(pluginName, error, {
-          showStack: !!options.debug
-        }));
+        process.nextTick(() => {
+          this.emit('error', new PluginError(pluginName, error, {
+            showStack: !!pluginOptions.debug
+          }));
+          done();
+        });
       });
   }
 
