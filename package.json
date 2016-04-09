@@ -27,6 +27,7 @@
   "homepage": "https://github.com/olegskl/gulp-stylelint",
   "dependencies": {
     "chalk": "^1.1.3",
+    "deep-extend": "^0.4.1",
     "gulp-util": "^3.0.7",
     "mkdirp": "^0.5.1",
     "promise": "^7.1.1",

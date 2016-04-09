@@ -7,6 +7,7 @@ import {lint} from 'stylelint';
 import gulpUtil from 'gulp-util';
 import through from 'through2';
 import Promise from 'promise';
+import deepExtend from 'deep-extend';
 import * as formatters from 'stylelint/dist/formatters';
 import reporterFactory from './reporter-factory';
 
@@ -43,7 +44,7 @@ module.exports = function gulpStylelint(options = {}) {
    * Lint options for stylelint's `lint` function.
    * @type Object
    */
-  const lintOptions = Object.assign({
+  const lintOptions = deepExtend({
     failAfterError: true,
     debug: false
   }, options);
@@ -80,7 +81,7 @@ module.exports = function gulpStylelint(options = {}) {
       return;
     }
 
-    const localLintOptions = Object.assign({}, lintOptions, {
+    const localLintOptions = deepExtend({}, lintOptions, {
       code: file.contents.toString(),
       codeFilename: file.path
     });
