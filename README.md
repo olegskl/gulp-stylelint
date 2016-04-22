@@ -17,8 +17,9 @@ npm install gulp-stylelint --save-dev
 Once you have [configured stylelint](http://stylelint.io/user-guide/configuration/) (e.g. you have a *.stylelintrc* file), start with the following code. You will find additional configuration [options](#options) below.
 
 ```js
+const gulp = require('gulp');
+
 gulp.task('lint-css', function lintCssTask() {
-  const gulp = require('gulp');
   const gulpStylelint = require('gulp-stylelint');
 
   return gulp
@@ -45,8 +46,9 @@ Below is the list of currently available stylelint formatters. Some of them are 
 gulp-stylelint supports all [stylelint options](http://stylelint.io/user-guide/node-api/#options) except [`files`](http://stylelint.io/user-guide/node-api/#files) and [`formatter`](http://stylelint.io/user-guide/node-api/#formatter) and accepts a custom set of options listed below:
 
 ```js
+const gulp = require('gulp');
+
 gulp.task('lint-css', function lintCssTask() {
-  const gulp = require('gulp');
   const gulpStylelint = require('gulp-stylelint');
   const myStylelintFormatter = require('my-stylelint-formatter');
 
