@@ -52,6 +52,21 @@ test('reporter should NOT write to console if console param is false', t => {
   gulpUtil.log.restore();
 });
 
+test('reporter should NOT write to console if formatter returned only whitespace', t => {
+  t.plan(1);
+  stub(gulpUtil, 'log');
+  const reporter = reporterFactory({
+    formatter() { return '  \n'; },
+    console: true
+  });
+  reporter({});
+  t.false(
+    gulpUtil.log.called,
+    'reporter has NOT written anything to console'
+  );
+  gulpUtil.log.restore();
+});
+
 test('reporter should NOT write to console by default', t => {
   t.plan(1);
   stub(gulpUtil, 'log');
