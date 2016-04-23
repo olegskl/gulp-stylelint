@@ -46,7 +46,7 @@ export default function reporterFactory(config = {}, options = {}) {
      */
     const formattedText = formatter(results);
 
-    if (config.console) {
+    if (config.console && formattedText.trim()) {
       asyncTasks.push(
         gulpUtil.log(`\n${formattedText}\n`)
       );
