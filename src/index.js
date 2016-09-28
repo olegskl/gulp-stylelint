@@ -10,6 +10,7 @@ import Promise from 'promise';
 import deepExtend from 'deep-extend';
 import * as formatters from 'stylelint/dist/formatters';
 import reporterFactory from './reporter-factory';
+import {applySourcemap} from './sourcemap';
 
 /**
  * Name of this plugin for reporting purposes.
@@ -93,7 +94,13 @@ module.exports = function gulpStylelint(options) {
       codeFilename: file.path
     });
 
-    lintPromiseList.push(lint(localLintOptions));
+    const sourceMap = file.sourceMap;
+    const promise = lint(localLintOptions).then(lintResult =>
+      new Promise(resolve => {
+        resolve(applySourcemap(lintResult, sourceMap));
+      })
+    );
+    lintPromiseList.push(promise);
 
     done(null, file);
   }
