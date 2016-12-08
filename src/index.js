@@ -132,7 +132,7 @@ module.exports = function gulpStylelint(options) {
       .catch(error => {
         process.nextTick(() => {
           this.emit('error', new PluginError(pluginName, error, {
-            showStack: !!pluginOptions.debug
+            showStack: Boolean(pluginOptions.debug)
           }));
           done();
         });
