@@ -122,8 +122,9 @@ module.exports = function gulpStylelint(options) {
       .then(passLintResultsThroughReporters)
       .then(lintResults => {
         process.nextTick(() => {
-          if (pluginOptions.failAfterError && lintResults.some(result => result.errored)) {
-            const errorMessage = 'Errors were found while linting code.';
+          const errorCount = lintResults.filter(result => result.errored).length;
+          if (pluginOptions.failAfterError && errorCount > 0) {
+            const errorMessage = `Failed with ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}`;
             this.emit('error', new PluginError(pluginName, errorMessage));
           }
           done();
