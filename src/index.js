@@ -122,7 +122,7 @@ module.exports = function gulpStylelint(options) {
       .then(passLintResultsThroughReporters)
       .then(lintResults => {
         process.nextTick(() => {
-          const errorCount = lintResults.filter(result => result.errored).length;
+          const errorCount = lintResults.reduce((sum, res) => sum + res.results[0].warnings.length, 0);
           if (pluginOptions.failAfterError && errorCount > 0) {
             const errorMessage = `Failed with ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}`;
             this.emit('error', new PluginError(pluginName, errorMessage));
