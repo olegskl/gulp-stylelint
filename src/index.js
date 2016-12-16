@@ -112,6 +112,15 @@ module.exports = function gulpStylelint(options) {
   }
 
   /**
+   * Determines if the severity of a stylelint warning is "error".
+   * @param {Object} warning - Stylelint results warning.
+   * @return {Boolean} True if warning's severity is "error", false otherwise.
+   */
+  function isErrorSeverity(warning) {
+    return warning.severity === 'error';
+  }
+
+  /**
    * Resolves promises and provides accumulated report to reporters.
    * @param {Function} done - Stream completion callback.
    * @return {undefined} Nothing is returned (done callback is used instead).
@@ -122,7 +131,10 @@ module.exports = function gulpStylelint(options) {
       .then(passLintResultsThroughReporters)
       .then(lintResults => {
         process.nextTick(() => {
-          const errorCount = lintResults.reduce((sum, res) => sum + res.results[0].warnings.length, 0);
+          const errorCount = lintResults.reduce((sum, res) => {
+            const errors = res.results[0].warnings.filter(isErrorSeverity);
+            return sum + errors.length;
+          }, 0);
           if (pluginOptions.failAfterError && errorCount > 0) {
             const errorMessage = `Failed with ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}`;
             this.emit('error', new PluginError(pluginName, errorMessage));
