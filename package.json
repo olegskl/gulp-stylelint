@@ -31,7 +31,7 @@
     "gulp-util": "^3.0.7",
     "mkdirp": "^0.5.1",
     "promise": "^7.1.1",
-    "stylelint": "^7.6.0",
+    "stylelint": "^7.7.0",
     "through2": "^2.0.3"
   },
   "devDependencies": {
