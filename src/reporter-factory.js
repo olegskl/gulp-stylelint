@@ -4,7 +4,7 @@
  */
 
 import gulpUtil from 'gulp-util';
-import * as formatters from 'stylelint/dist/formatters';
+import {formatters} from 'stylelint';
 import writer from './writer';
 
 /**
