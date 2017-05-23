@@ -42,7 +42,7 @@
     "eslint": "^3.16.0",
     "eslint-config-meetic": "^4.0.0",
     "gulp": "^3.9.1",
-    "sinon": "^1.17.7",
+    "sinon": "^2.3.1",
     "tape": "^4.6.3"
   }
 }
