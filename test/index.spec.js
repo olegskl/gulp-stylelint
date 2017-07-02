@@ -1,3 +1,4 @@
+import fs from 'fs';
 import path from 'path';
 import gulp from 'gulp';
 import test from 'tape';
@@ -33,7 +34,7 @@ test('should NOT emit an error when configuration is set', t => {
   t.plan(1);
   gulp
     .src(fixtures('basic.css'))
-    .pipe(gulpStylelint({config: {rules: []}}))
+    .pipe(gulpStylelint({config: {rules: {}}}))
     .on('error', error => t.fail(`error ${error.code} has been emitted`))
     .on('finish', () => t.pass('no error emitted'));
 });
@@ -45,4 +46,33 @@ test('should expose an object with stylelint formatter functions', t => {
     .keys(gulpStylelint.formatters)
     .map(fName => gulpStylelint.formatters[fName]);
   t.true(formatters.every(f => typeof f === 'function'), 'all formatters are functions');
+});
+
+test('should fix files when "fix" option is set', t => {
+  /* eslint-disable no-sync */
+  t.plan(1);
+  const fixableFile = path.resolve(__dirname, '../tmp/fixable.css');
+  const fixableContents = 'a { color: #FFF; }';
+  const fixedContents = 'a { color: #fff; }';
+  fs.writeFileSync(fixableFile, fixableContents, 'utf8');
+  gulp
+    .src(fixableFile)
+    .pipe(gulpStylelint({
+      config: {
+        rules: {'color-hex-case': 'lower'}
+      },
+      fix: true
+    }))
+    .on('error', error => {
+      t.fail(`error ${error.code} has been emitted`);
+      fs.unlinkSync(fixableFile);
+    })
+    .on('finish', () => {
+      t.equal(
+        fs.readFileSync(fixableFile, 'utf8'),
+        fixedContents,
+        'fixable file has been fixed'
+      );
+      fs.unlinkSync(fixableFile);
+    });
 });

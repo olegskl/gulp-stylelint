@@ -87,14 +87,27 @@ module.exports = function gulpStylelint(options) {
       return;
     }
 
-    const localLintOptions = deepExtend({}, lintOptions, {
+    // HACK until stylelint is changed.
+    // Stylelint has a "fix" option which, when set to true,
+    // will directly modify the original file (using fs.write)
+    // but only if the "files" options is specified. As of 7.11.0
+    // Stylelint does not fix code as string, so we hack it by
+    // changing configuration, but this results in the following:
+    //  1. The file will be read twice (by gulp and by stylelint).
+    //  2. The piped out file will not contain fixed content.
+    const stylelintFileOptions = lintOptions.fix ? {files: [file.path]} : {
       code: file.contents.toString(),
       codeFilename: file.path
-    });
+    };
 
-    lintPromiseList.push(lint(localLintOptions));
+    const localLintOptions = deepExtend({}, lintOptions, stylelintFileOptions);
+    const lintPromise = lint(localLintOptions);
 
-    done(null, file);
+    lintPromiseList.push(lintPromise);
+
+    lintPromise
+      .then(() => done(null, file))
+      .catch(() => done(null, file));
   }
 
   /**
