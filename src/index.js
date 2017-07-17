@@ -151,7 +151,7 @@ module.exports = function gulpStylelint(options) {
       });
   }
 
-  return through.obj(onFile, onStreamEnd);
+  return through.obj(onFile, onStreamEnd).resume();
 };
 
 /**

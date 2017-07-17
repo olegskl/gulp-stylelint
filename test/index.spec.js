@@ -38,6 +38,16 @@ test('should NOT emit an error when configuration is set', t => {
     .on('finish', () => t.pass('no error emitted'));
 });
 
+test('should emit an error when linter complains', t => {
+  t.plan(1);
+  gulp
+    .src(fixtures('invalid.css'))
+    .pipe(gulpStylelint({config: {rules: {
+      'color-hex-case': 'lower'
+    }}}))
+    .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
+});
+
 test('should expose an object with stylelint formatter functions', t => {
   t.plan(2);
   t.equal(typeof gulpStylelint.formatters, 'object', 'formatters property is an object');
