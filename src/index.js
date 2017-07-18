@@ -24,7 +24,7 @@ const pluginName = 'gulp-stylelint';
  * @param {Boolean} [options.debug] - If true, error stack will be printed.
  * @return {Stream} Object stream usable in Gulp pipes.
  */
-module.exports = function gulpStylelint(options) {
+module.exports = function gulpStylelint(options) { // eslint-disable-line max-statements
 
   /**
    * Plugin options with defaults applied.
@@ -57,6 +57,8 @@ module.exports = function gulpStylelint(options) {
   // Remove the stylelint options that cannot be used:
   delete lintOptions.files; // css code will be provided by gulp instead
   delete lintOptions.formatter; // formatters are defined in the `reporters` option
+  delete lintOptions.cache; // gulp caching should be used instead
+  delete lintOptions.fix; // FIXME: wait for stylelint support
 
   // Remove gulp-stylelint options so that they don't interfere with stylelint options:
   delete lintOptions.reportOutputDir;
