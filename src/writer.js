@@ -6,7 +6,7 @@
 import fs from 'fs';
 import path from 'path';
 import mkdirp from 'mkdirp';
-import {stripColor} from 'chalk';
+import stripAnsi from 'strip-ansi';
 import {denodeify} from 'promise';
 
 const mkdir = denodeify(mkdirp);
@@ -22,5 +22,5 @@ const writeFile = denodeify(fs.writeFile);
 export default function writer(text, dest, destRoot = process.cwd()) {
   const fullpath = path.resolve(destRoot, dest);
   return mkdir(path.dirname(fullpath))
-    .then(() => writeFile(fullpath, stripColor(text)));
+    .then(() => writeFile(fullpath, stripAnsi(text)));
 }
