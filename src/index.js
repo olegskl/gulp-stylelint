@@ -9,6 +9,7 @@ import through from 'through2';
 import Promise from 'promise';
 import deepExtend from 'deep-extend';
 import reporterFactory from './reporter-factory';
+import applySourcemap from './apply-sourcemap';
 
 /**
  * Name of this plugin for reporting purposes.
@@ -94,7 +95,11 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
       codeFilename: file.path
     });
 
-    lintPromiseList.push(lint(localLintOptions));
+    const lintPromise = file.sourceMap ?
+      lint(localLintOptions).then(lintResult => applySourcemap(lintResult, file.sourceMap)) :
+      lint(localLintOptions);
+
+    lintPromiseList.push(lintPromise);
 
     done(null, file);
   }
