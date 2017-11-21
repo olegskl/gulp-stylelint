@@ -14,7 +14,9 @@ test('reporter factory should return a function', t => {
 
 test('reporter should return a promise', t => {
   t.plan(1);
-  const reporter = reporterFactory({formatter() {}});
+  const reporter = reporterFactory({formatter() {
+    // empty formatter
+  }});
   t.equal(
     typeof reporter({}).then,
     'function',

@@ -4,7 +4,7 @@
   "description": "Gulp plugin for running Stylelint results through various reporters.",
   "main": "dist/index.js",
   "scripts": {
-    "lint": "eslint src/**/*.js",
+    "lint": "eslint {src,test}/**/*.js",
     "test": "tape -r babel-register test/*.spec.js",
     "transpile": "babel src --out-dir dist",
     "prepublish": "npm run lint && npm test && npm run transpile"

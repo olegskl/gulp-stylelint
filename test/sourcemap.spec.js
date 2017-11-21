@@ -23,8 +23,8 @@ test('should emit no errors when stylelint rules are satisfied', t => {
     .pipe(gulpSourcemaps.init())
     .pipe(gulpStylelint({
       config: {rules: {}}
-    })
-    .on('finish', () => t.pass('no error emitted')));
+    }))
+    .on('finish', () => t.pass('no error emitted'));
 });
 
 test('should apply sourcemaps correctly', t => {
