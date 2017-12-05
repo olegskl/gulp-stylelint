@@ -99,6 +99,25 @@ List of reporter configuration objects (see below). Defaults to an empty array.
 
 When set to `true`, the error handler will print an error stack trace. Defaults to `false`.
 
+## Autofix
+
+The `fix: true` option instructs stylelint to try to fix as many issues as possible. The fixes are applied to the gulp stream. The fixed content can be saved to file using `gulp.dest`.
+
+```js
+const gulp = require('gulp');
+
+gulp.task('fix-css', function fixCssTask() {
+  const gulpStylelint = require('gulp-stylelint');
+
+  return gulp
+    .src('src/**/*.css')
+    .pipe(gulpStylelint({
+      fix: true
+    }))
+    .pipe(gulp.dest('src'));
+});
+```
+
 ## License
 
 [MIT License](http://opensource.org/licenses/MIT)

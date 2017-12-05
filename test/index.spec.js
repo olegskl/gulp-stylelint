@@ -1,7 +1,12 @@
+/* eslint-disable no-sync */
+
+import fs from 'fs';
 import path from 'path';
 import gulp from 'gulp';
 import test from 'tape';
 import gulpStylelint from '../src/index';
+
+import gulpSourcemaps from 'gulp-sourcemaps';
 
 /**
  * Creates a full path to the fixtures glob.
@@ -46,6 +51,27 @@ test('should emit an error when linter complains', t => {
       'color-hex-case': 'lower'
     }}}))
     .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
+});
+
+test('should fix the file without emitting errors', t => {
+  t.plan(2);
+  gulp
+    .src(fixtures('invalid.css'))
+    .pipe(gulpSourcemaps.init())
+    .pipe(gulpStylelint({
+      fix: true,
+      config: {rules: {'color-hex-case': 'lower'}}
+    }))
+    .pipe(gulp.dest(path.resolve(__dirname, '../tmp')))
+    .on('error', error => t.fail(`error ${error.code} has been emitted`))
+    .on('finish', () => {
+      t.equal(
+        fs.readFileSync(path.resolve(__dirname, '../tmp/invalid.css'), 'utf8'),
+        '.foo {\n  color: #fff;\n}\n',
+        'report file has fixed contents'
+      );
+      t.pass('no error emitted');
+    });
 });
 
 test('should expose an object with stylelint formatter functions', t => {
