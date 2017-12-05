@@ -59,7 +59,6 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
   delete lintOptions.files; // css code will be provided by gulp instead
   delete lintOptions.formatter; // formatters are defined in the `reporters` option
   delete lintOptions.cache; // gulp caching should be used instead
-  delete lintOptions.fix; // FIXME: wait for stylelint support
 
   // Remove gulp-stylelint options so that they don't interfere with stylelint options:
   delete lintOptions.reportOutputDir;
@@ -95,13 +94,25 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
       codeFilename: file.path
     });
 
-    const lintPromise = file.sourceMap ?
-      lint(localLintOptions).then(lintResult => applySourcemap(lintResult, file.sourceMap)) :
-      lint(localLintOptions);
+    const lintPromise = lint(localLintOptions)
+      .then(lintResult =>
+        file.sourceMap ?
+          applySourcemap(lintResult, file.sourceMap) :
+          lintResult
+      )
+      .then(lintResult => {
+        if (lintOptions.fix && lintResult.output) {
+          file.contents = Buffer.from(lintResult.output);
+        }
+        done(null, file);
+        return lintResult;
+      })
+      .catch(error => {
+        done(null, file);
+        return Promise.reject(error);
+      });
 
     lintPromiseList.push(lintPromise);
-
-    done(null, file);
   }
 
   /**
