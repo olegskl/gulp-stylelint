@@ -3,7 +3,7 @@
  * @module gulp-stylelint/reporter-factory
  */
 
-import gulpUtil from 'gulp-util';
+import fancyLog from 'fancy-log';
 import {formatters} from 'stylelint';
 import writer from './writer';
 
@@ -48,7 +48,7 @@ export default function reporterFactory(config = {}, options = {}) {
 
     if (config.console && formattedText.trim()) {
       asyncTasks.push(
-        gulpUtil.log(`\n${formattedText}\n`)
+        fancyLog.info(`\n${formattedText}\n`)
       );
     }
 

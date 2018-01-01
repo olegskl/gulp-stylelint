@@ -4,7 +4,7 @@
  */
 
 import {formatters, lint} from 'stylelint';
-import {PluginError} from 'gulp-util';
+import PluginError from 'plugin-error';
 import through from 'through2';
 import Promise from 'promise';
 import deepExtend from 'deep-extend';
