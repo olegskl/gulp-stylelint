@@ -1,6 +1,6 @@
 import test from 'tape';
 import {stub} from 'sinon';
-import gulpUtil from 'gulp-util';
+import fancyLog from 'fancy-log';
 import reporterFactory from '../src/reporter-factory';
 
 test('reporter factory should return a function', t => {
@@ -26,59 +26,59 @@ test('reporter should return a promise', t => {
 
 test('reporter should write to console if console param is true', t => {
   t.plan(1);
-  stub(gulpUtil, 'log');
+  stub(fancyLog, 'info');
   const reporter = reporterFactory({
     formatter() { return 'foo'; },
     console: true
   });
   reporter({});
   t.true(
-    gulpUtil.log.calledWith('\nfoo\n'),
+    fancyLog.info.calledWith('\nfoo\n'),
     'reporter has written padded formatter output to console'
   );
-  gulpUtil.log.restore();
+  fancyLog.info.restore();
 });
 
 test('reporter should NOT write to console if console param is false', t => {
   t.plan(1);
-  stub(gulpUtil, 'log');
+  stub(fancyLog, 'info');
   const reporter = reporterFactory({
     formatter() { return 'foo'; },
     console: false
   });
   reporter({});
   t.false(
-    gulpUtil.log.called,
+    fancyLog.info.called,
     'reporter has NOT written anything to console'
   );
-  gulpUtil.log.restore();
+  fancyLog.info.restore();
 });
 
 test('reporter should NOT write to console if formatter returned only whitespace', t => {
   t.plan(1);
-  stub(gulpUtil, 'log');
+  stub(fancyLog, 'info');
   const reporter = reporterFactory({
     formatter() { return '  \n'; },
     console: true
   });
   reporter({});
   t.false(
-    gulpUtil.log.called,
+    fancyLog.info.called,
     'reporter has NOT written anything to console'
   );
-  gulpUtil.log.restore();
+  fancyLog.info.restore();
 });
 
 test('reporter should NOT write to console by default', t => {
   t.plan(1);
-  stub(gulpUtil, 'log');
+  stub(fancyLog, 'info');
   const reporter = reporterFactory({
     formatter() { return 'foo'; }
   });
   reporter({});
   t.false(
-    gulpUtil.log.called,
+    fancyLog.info.called,
     'reporter has NOT written anything to console'
   );
-  gulpUtil.log.restore();
+  fancyLog.info.restore();
 });
