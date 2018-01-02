@@ -71,3 +71,48 @@ test('should apply sourcemaps correctly', t => {
     }))
     .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
 });
+
+test('should ignore empty sourcemaps', t => {
+  t.plan(6);
+  gulp
+    .src(fixtures('original-*.css'))
+    .pipe(gulpSourcemaps.init()) // empty sourcemaps here
+    .pipe(gulpStylelint({
+      config: {rules: {
+        'declaration-no-important': true
+      }},
+      reporters: [{
+        formatter(lintResult) {
+          t.deepEqual(
+            lintResult.map(r => r.source),
+            [
+              path.join(__dirname, 'fixtures', 'original-a.css'),
+              path.join(__dirname, 'fixtures', 'original-b.css')
+            ],
+            'there are two files'
+          );
+          t.equal(
+            lintResult[0].warnings[0].line,
+            2,
+            'original-a.css has an error on line 2'
+          );
+          t.equal(
+            lintResult[0].warnings[0].column,
+            15,
+            'original-a.css has an error on column 15'
+          );
+          t.equal(
+            lintResult[1].warnings[0].line,
+            2,
+            'original-b.css has an error on line 2'
+          );
+          t.equal(
+            lintResult[1].warnings[0].column,
+            16,
+            'original-b.css has an error on column 16'
+          );
+        }
+      }]
+    }))
+    .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
+});
