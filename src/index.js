@@ -96,7 +96,9 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
 
     const lintPromise = lint(localLintOptions)
       .then(lintResult =>
-        file.sourceMap ?
+        // Checking for the presence of sourceMap.mappings
+        // in case sourcemaps are initialized, but still empty:
+        file.sourceMap && file.sourceMap.mappings ?
           applySourcemap(lintResult, file.sourceMap) :
           lintResult
       )
