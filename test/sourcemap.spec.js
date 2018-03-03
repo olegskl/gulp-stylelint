@@ -69,7 +69,7 @@ test('should apply sourcemaps correctly', t => {
         }
       }]
     }))
-    .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
+    .on('error', () => t.pass('error has been emitted correctly'));
 });
 
 test('should ignore empty sourcemaps', t => {
@@ -114,5 +114,5 @@ test('should ignore empty sourcemaps', t => {
         }
       }]
     }))
-    .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
+    .on('error', () => t.pass('error has been emitted correctly'));
 });
