@@ -39,7 +39,7 @@ test('should NOT emit an error when configuration is set', t => {
   gulp
     .src(fixtures('basic.css'))
     .pipe(gulpStylelint({config: {rules: []}}))
-    .on('error', error => t.fail(`error ${error.code} has been emitted`))
+    .on('error', () => t.fail('error has been emitted'))
     .on('finish', () => t.pass('no error emitted'));
 });
 
@@ -50,7 +50,7 @@ test('should emit an error when linter complains', t => {
     .pipe(gulpStylelint({config: {rules: {
       'color-hex-case': 'lower'
     }}}))
-    .on('error', error => t.pass(`error ${error.code} has been emitted correctly`));
+    .on('error', () => t.pass('error has been emitted correctly'));
 });
 
 test('should fix the file without emitting errors', t => {
@@ -63,7 +63,7 @@ test('should fix the file without emitting errors', t => {
       config: {rules: {'color-hex-case': 'lower'}}
     }))
     .pipe(gulp.dest(path.resolve(__dirname, '../tmp')))
-    .on('error', error => t.fail(`error ${error.code} has been emitted`))
+    .on('error', error => t.fail(`error ${error} has been emitted`))
     .on('finish', () => {
       t.equal(
         fs.readFileSync(path.resolve(__dirname, '../tmp/invalid.css'), 'utf8'),
