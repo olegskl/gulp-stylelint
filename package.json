@@ -25,6 +25,9 @@
     "url": "https://github.com/olegskl/gulp-stylelint/issues"
   },
   "homepage": "https://github.com/olegskl/gulp-stylelint",
+  "engines": {
+    "node": ">=6"
+  },
   "peerDependencies": {
     "stylelint": "^9.0.0"
   },
@@ -52,7 +55,7 @@
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^2.6.1",
     "sinon": "^4.1.2",
-    "stylelint": "^9.1.1",
+    "stylelint": "^9.6.0",
     "tape": "^4.8.0"
   }
 }
