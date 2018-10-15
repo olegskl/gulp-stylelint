@@ -150,7 +150,8 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
       .then(passLintResultsThroughReporters)
       .then(lintResults => {
         process.nextTick(() => {
-          const errorCount = lintResults.reduce((sum, res) => {
+          // if the file was skipped, for example, by .stylelintignore, then res.results will be []
+          const errorCount = lintResults.filter(res => res.results.length).reduce((sum, res) => {
             const errors = res.results[0].warnings.filter(isErrorSeverity);
             return sum + errors.length;
           }, 0);

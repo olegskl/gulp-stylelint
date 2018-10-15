@@ -53,6 +53,17 @@ test('should emit an error when linter complains', t => {
     .on('error', () => t.pass('error has been emitted correctly'));
 });
 
+test('should ignore file', t => {
+  t.plan(1);
+  gulp
+    .src([fixtures('basic.css'), fixtures('invalid.css')])
+    .pipe(gulpStylelint({
+      config: {rules: {'color-hex-case': 'lower'}},
+      ignorePath: fixtures('ignore')
+    }))
+    .on('finish', () => t.pass('no error emitted'));
+});
+
 test('should fix the file without emitting errors', t => {
   t.plan(2);
   gulp
