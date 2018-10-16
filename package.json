@@ -29,7 +29,7 @@
     "node": ">=6"
   },
   "peerDependencies": {
-    "stylelint": "^9.0.0"
+    "stylelint": "^9.6.0"
   },
   "dependencies": {
     "chalk": "^2.3.0",
