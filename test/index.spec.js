@@ -1,12 +1,12 @@
-/* eslint-disable no-sync */
+'use strict';
 
-import fs from 'fs';
-import path from 'path';
-import gulp from 'gulp';
-import test from 'tape';
-import gulpStylelint from '../src/index';
+const fs = require('fs');
+const gulp = require('gulp');
+const gulpSourcemaps = require('gulp-sourcemaps');
+const path = require('path');
+const test = require('tape');
 
-import gulpSourcemaps from 'gulp-sourcemaps';
+const gulpStylelint = require('../src/index');
 
 /**
  * Creates a full path to the fixtures glob.
@@ -88,8 +88,10 @@ test('should fix the file without emitting errors', t => {
 test('should expose an object with stylelint formatter functions', t => {
   t.plan(2);
   t.equal(typeof gulpStylelint.formatters, 'object', 'formatters property is an object');
+
   const formatters = Object
     .keys(gulpStylelint.formatters)
     .map(fName => gulpStylelint.formatters[fName]);
+
   t.true(formatters.every(f => typeof f === 'function'), 'all formatters are functions');
 });

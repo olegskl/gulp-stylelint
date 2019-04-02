@@ -1,16 +1,9 @@
-/**
- * Gulp stylelint writer.
- * @module gulp-stylelint/writer
- */
+'use strict';
 
-import fs from 'fs';
-import path from 'path';
-import mkdirp from 'mkdirp';
-import stripAnsi from 'strip-ansi';
-import {denodeify} from 'promise';
-
-const mkdir = denodeify(mkdirp);
-const writeFile = denodeify(fs.writeFile);
+const fs = require('fs');
+const mkdirp = require('mkdirp');
+const path = require('path');
+const stripAnsi = require('strip-ansi');
 
 /**
  * Creates the output folder and writes formatted text to a file.
@@ -19,8 +12,22 @@ const writeFile = denodeify(fs.writeFile);
  * @param {String} [destRoot] - Destination root folder, defaults to cwd.
  * @return {Promise} Resolved when folder is created and file is written.
  */
-export default function writer(text, dest, destRoot = process.cwd()) {
+module.exports = function writer(text, dest, destRoot = process.cwd()) {
   const fullpath = path.resolve(destRoot, dest);
-  return mkdir(path.dirname(fullpath))
-    .then(() => writeFile(fullpath, stripAnsi(text)));
-}
+
+  return new Promise((resolve, reject) => {
+    mkdirp(path.dirname(fullpath), mkdirpError => {
+      if (mkdirpError) {
+        reject(mkdirpError);
+      } else {
+        fs.writeFile(fullpath, stripAnsi(text), fsWriteFileError => {
+          if (fsWriteFileError) {
+            reject(fsWriteFileError);
+          } else {
+            resolve();
+          }
+        });
+      }
+    });
+  });
+};
