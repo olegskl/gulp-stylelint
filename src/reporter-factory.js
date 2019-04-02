@@ -1,11 +1,9 @@
-/**
- * Gulp stylelint reporter factory.
- * @module gulp-stylelint/reporter-factory
- */
+'use strict';
 
-import fancyLog from 'fancy-log';
-import {formatters} from 'stylelint';
-import writer from './writer';
+const fancyLog = require('fancy-log');
+const {formatters} = require('stylelint');
+
+const writer = require('./writer');
 
 /**
  * Creates a reporter from the given config.
@@ -13,7 +11,7 @@ import writer from './writer';
  * @param {Object} [options] - Plugin options.
  * @return {Function} Reporter.
  */
-export default function reporterFactory(config = {}, options = {}) {
+module.exports = function reporterFactory(config = {}, options = {}) {
 
   /**
    * Formatter for stylelint results.
@@ -60,4 +58,4 @@ export default function reporterFactory(config = {}, options = {}) {
 
     return Promise.all(asyncTasks);
   };
-}
+};

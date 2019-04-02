@@ -1,11 +1,14 @@
-import path from 'path';
-import gulp from 'gulp';
-import test from 'tape';
-import gulpSourcemaps from 'gulp-sourcemaps';
-import gulpCleanCss from 'gulp-clean-css';
-import gulpRename from 'gulp-rename';
-import gulpConcat from 'gulp-concat';
-import gulpStylelint from '../src/index';
+'use strict';
+
+const gulp = require('gulp');
+const gulpCleanCss = require('gulp-clean-css');
+const gulpConcat = require('gulp-concat');
+const gulpRename = require('gulp-rename');
+const gulpSourcemaps = require('gulp-sourcemaps');
+const path = require('path');
+const test = require('tape');
+
+const gulpStylelint = require('../src/index');
 
 /**
  * Creates a full path to the fixtures glob.

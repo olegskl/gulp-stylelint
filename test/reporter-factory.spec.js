@@ -1,7 +1,10 @@
-import test from 'tape';
-import {stub} from 'sinon';
-import fancyLog from 'fancy-log';
-import reporterFactory from '../src/reporter-factory';
+'use strict';
+
+const fancyLog = require('fancy-log');
+const test = require('tape');
+const {stub} = require('sinon');
+
+const reporterFactory = require('../src/reporter-factory');
 
 test('reporter factory should return a function', t => {
   t.plan(1);
@@ -14,9 +17,11 @@ test('reporter factory should return a function', t => {
 
 test('reporter should return a promise', t => {
   t.plan(1);
+
   const reporter = reporterFactory({formatter() {
     // empty formatter
   }});
+
   t.equal(
     typeof reporter({}).then,
     'function',
@@ -31,7 +36,9 @@ test('reporter should write to console if console param is true', t => {
     formatter() { return 'foo'; },
     console: true
   });
+
   reporter({});
+
   t.true(
     fancyLog.info.calledWith('\nfoo\n'),
     'reporter has written padded formatter output to console'
@@ -46,7 +53,9 @@ test('reporter should NOT write to console if console param is false', t => {
     formatter() { return 'foo'; },
     console: false
   });
+
   reporter({});
+
   t.false(
     fancyLog.info.called,
     'reporter has NOT written anything to console'
@@ -61,7 +70,9 @@ test('reporter should NOT write to console if formatter returned only whitespace
     formatter() { return '  \n'; },
     console: true
   });
+
   reporter({});
+
   t.false(
     fancyLog.info.called,
     'reporter has NOT written anything to console'
@@ -75,7 +86,9 @@ test('reporter should NOT write to console by default', t => {
   const reporter = reporterFactory({
     formatter() { return 'foo'; }
   });
+
   reporter({});
+
   t.false(
     fancyLog.info.called,
     'reporter has NOT written anything to console'

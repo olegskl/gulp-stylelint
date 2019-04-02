@@ -1,11 +1,12 @@
-/* eslint-disable no-sync */
+'use strict';
 
-import test from 'tape';
-import fs from 'fs';
-import path from 'path';
-import chalk from 'chalk';
-import writer from '../src/writer';
-import {stub} from 'sinon';
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+const test = require('tape');
+const {stub} = require('sinon');
+
+const writer = require('../src/writer');
 
 const tmpDir = path.resolve(__dirname, '../tmp');
 
@@ -28,7 +29,7 @@ test('writer should write to cwd if base dir is not specified', t => {
       );
     })
     .catch(e => t.fail(`failed to create report file: ${e.message}`))
-    .finally(() => {
+    .then(() => {
       process.cwd.restore();
       fs.unlinkSync(reportFilePath);
     });
@@ -54,7 +55,7 @@ test('writer should write to a base folder if it is specified', t => {
       );
     })
     .catch(e => t.fail(`failed to create report file: ${e.message}`))
-    .finally(() => {
+    .then(() => {
       process.cwd.restore();
       fs.unlinkSync(reportFilePath);
       fs.rmdirSync(reportDirPath);
@@ -76,7 +77,7 @@ test('writer should strip chalk colors from formatted output', t => {
       );
     })
     .catch(e => t.fail(`failed to create report file: ${e.message}`))
-    .finally(() => {
+    .then(() => {
       process.cwd.restore();
       fs.unlinkSync(reportFilePath);
     });

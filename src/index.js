@@ -1,15 +1,11 @@
-/**
- * Gulp stylelint plugin.
- * @module gulp-stylelint
- */
+'use strict';
 
-import {formatters, lint} from 'stylelint';
-import PluginError from 'plugin-error';
-import through from 'through2';
-import Promise from 'promise';
-import deepExtend from 'deep-extend';
-import reporterFactory from './reporter-factory';
-import applySourcemap from './apply-sourcemap';
+const PluginError = require('plugin-error');
+const through = require('through2');
+const {formatters, lint} = require('stylelint');
+
+const applySourcemap = require('./apply-sourcemap');
+const reporterFactory = require('./reporter-factory');
 
 /**
  * Name of this plugin for reporting purposes.
@@ -25,13 +21,13 @@ const pluginName = 'gulp-stylelint';
  * @param {Boolean} [options.debug] - If true, error stack will be printed.
  * @return {Stream} Object stream usable in Gulp pipes.
  */
-module.exports = function gulpStylelint(options) { // eslint-disable-line max-statements
+module.exports = function gulpStylelint(options) {
 
   /**
    * Plugin options with defaults applied.
    * @type Object
    */
-  const pluginOptions = deepExtend({
+  const pluginOptions = Object.assign({
     failAfterError: true,
     debug: false
   }, options);
@@ -40,7 +36,7 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
    * Lint options for stylelint's `lint` function.
    * @type Object
    */
-  const lintOptions = deepExtend({}, options);
+  const lintOptions = Object.assign({}, options);
 
   /**
    * List of gulp-stylelint reporters.
@@ -80,16 +76,18 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
 
     if (file.isNull()) {
       done(null, file);
+
       return;
     }
 
     if (file.isStream()) {
       this.emit('error', new PluginError(pluginName, 'Streaming is not supported'));
       done();
+
       return;
     }
 
-    const localLintOptions = deepExtend({}, lintOptions, {
+    const localLintOptions = Object.assign({}, lintOptions, {
       code: file.contents.toString(),
       codeFilename: file.path
     });
@@ -106,11 +104,14 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
         if (lintOptions.fix && lintResult.output) {
           file.contents = Buffer.from(lintResult.output);
         }
+
         done(null, file);
+
         return lintResult;
       })
       .catch(error => {
         done(null, file);
+
         return Promise.reject(error);
       });
 
@@ -125,6 +126,7 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
   function passLintResultsThroughReporters(lintResults) {
     const warnings = lintResults
       .reduce((accumulated, res) => accumulated.concat(res.results), []);
+
     return Promise
       .all(reporters.map(reporter => reporter(warnings)))
       .then(() => lintResults);
@@ -152,13 +154,13 @@ module.exports = function gulpStylelint(options) { // eslint-disable-line max-st
         process.nextTick(() => {
           // if the file was skipped, for example, by .stylelintignore, then res.results will be []
           const errorCount = lintResults.filter(res => res.results.length).reduce((sum, res) => {
-            const errors = res.results[0].warnings.filter(isErrorSeverity);
-            return sum + errors.length;
+            return sum + res.results[0].warnings.filter(isErrorSeverity).length;
           }, 0);
+
           if (pluginOptions.failAfterError && errorCount > 0) {
-            const errorMessage = `Failed with ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}`;
-            this.emit('error', new PluginError(pluginName, errorMessage));
+            this.emit('error', new PluginError(pluginName, `Failed with ${errorCount} ${errorCount === 1 ? 'error' : 'errors'}`));
           }
+
           done();
         });
       })
