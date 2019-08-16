@@ -18,6 +18,7 @@ const pluginName = 'gulp-stylelint';
  * @param {Object} [options] - Plugin options.
  * @param {String} [options.reportOutputDir] - Common path for all reporters.
  * @param {[Object]} [options.reporters] - Reporter configurations.
+ * @param {Boolean} [options.failAfterError] - If true, the process will end with non-zero error code if any error was raised.
  * @param {Boolean} [options.debug] - If true, error stack will be printed.
  * @return {Stream} Object stream usable in Gulp pipes.
  */
