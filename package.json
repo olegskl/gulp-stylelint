@@ -4,7 +4,7 @@
   "description": "Gulp plugin for running Stylelint results through various reporters.",
   "main": "src/index.js",
   "files": [
-    "/src"
+    "/src/*.js"
   ],
   "scripts": {
     "lint": "eslint \"{src,test}/**/*.js\"",
