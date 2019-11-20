@@ -8,8 +8,9 @@
   ],
   "scripts": {
     "lint": "eslint \"{src,test}/**/*.js\"",
-    "test": "tape \"test/*.spec.js\"",
-    "prepublishOnly": "npm run lint && npm test"
+    "tape": "tape \"test/*.spec.js\"",
+    "test": "npm run lint && npm run tape",
+    "prepublishOnly": "npm test"
   },
   "repository": {
     "type": "git",
