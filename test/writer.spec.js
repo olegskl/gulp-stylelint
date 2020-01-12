@@ -38,11 +38,12 @@ test('writer should write to cwd if base dir is not specified', t => {
 test('writer should write to a base folder if it is specified', t => {
   stub(process, 'cwd').returns(tmpDir);
   const reportDirPath = path.join(process.cwd(), 'foodir');
-  const reportFilePath = path.join(reportDirPath, 'foo.txt');
+  const reportSubdirPath = path.join(reportDirPath, '/subdir');
+  const reportFilePath = path.join(reportSubdirPath, 'foo.txt');
 
   t.plan(2);
 
-  writer('footext', 'foo.txt', 'foodir')
+  writer('footext', 'foo.txt', 'foodir/subdir')
     .then(() => {
       t.true(
         fs.statSync(reportFilePath).isFile(),
@@ -58,6 +59,7 @@ test('writer should write to a base folder if it is specified', t => {
     .then(() => {
       process.cwd.restore();
       fs.unlinkSync(reportFilePath);
+      fs.rmdirSync(reportSubdirPath);
       fs.rmdirSync(reportDirPath);
     });
 });

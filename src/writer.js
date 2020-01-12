@@ -1,7 +1,6 @@
 'use strict';
 
 const fs = require('fs');
-const mkdirp = require('mkdirp');
 const path = require('path');
 const stripAnsi = require('strip-ansi');
 
@@ -16,7 +15,7 @@ module.exports = function writer(text, dest, destRoot = process.cwd()) {
   const fullpath = path.resolve(destRoot, dest);
 
   return new Promise((resolve, reject) => {
-    mkdirp(path.dirname(fullpath), mkdirpError => {
+    fs.mkdir(path.dirname(fullpath), { recursive: true }, mkdirpError => {
       if (mkdirpError) {
         reject(mkdirpError);
       } else {
