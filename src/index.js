@@ -106,6 +106,8 @@ module.exports = function gulpStylelint(options) {
           file.contents = Buffer.from(lintResult.output);
         }
 
+        file.stylelint = lintResult;
+
         done(null, file);
 
         return lintResult;

@@ -5,6 +5,7 @@ const gulp = require('gulp');
 const gulpSourcemaps = require('gulp-sourcemaps');
 const path = require('path');
 const test = require('tape');
+const { Transform } = require('stream');
 
 const gulpStylelint = require('../src/index');
 
@@ -51,6 +52,22 @@ test('should emit an error when linter complains', t => {
       'color-hex-case': 'lower'
     }}}))
     .on('error', () => t.pass('error has been emitted correctly'));
+});
+
+test('should pass linter result down to stream', t => {
+  t.plan(1);
+  gulp
+    .src(fixtures('basic.css'))
+    .pipe(gulpStylelint({config: {rules: {
+      'color-hex-case': 'lower'
+    }}}))
+    .pipe(new Transform({
+      objectMode: true,
+      transform: (file, enc, cb) => {
+        t.equal(file.stylelint.errored, false, 'has no errors');
+        cb(null, file);
+      }
+    }));
 });
 
 test('should ignore file', t => {
