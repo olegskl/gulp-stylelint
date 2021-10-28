@@ -1,9 +1,10 @@
 # gulp-stylelint
 
-[![NPM version](http://img.shields.io/npm/v/gulp-stylelint.svg)](https://www.npmjs.org/package/gulp-stylelint)
-[![Build Status](https://travis-ci.org/olegskl/gulp-stylelint.svg?branch=master)](https://travis-ci.org/olegskl/gulp-stylelint)
-[![Dependency Status](https://david-dm.org/olegskl/gulp-stylelint.svg)](https://david-dm.org/olegskl/gulp-stylelint)
-[![Join the chat at https://gitter.im/olegskl/gulp-stylelint](https://badges.gitter.im/olegskl/gulp-stylelint.svg)](https://gitter.im/olegskl/gulp-stylelint?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![NPM version](http://img.shields.io/npm/v/@ronilaukkarinen/gulp-stylelint.svg)](https://www.npmjs.org/package/@ronilaukkarinen/gulp-stylelint)
+[![Build Status](https://travis-ci.org/olegskl/gulp-stylelint.svg?branch=master)](https://travis-ci.org/ronilaukkarinen/gulp-stylelint)
+[![Dependency Status](https://david-dm.org/olegskl/gulp-stylelint.svg)](https://david-dm.org/ronilaukkarinen/gulp-stylelint)
+
+**This is an active fork of [olegskl/gulp-stylelint](https://github.com/olegskl/gulp-stylelint) which seems to have been sleeping for a long time.**
 
 A [Gulp](http://gulpjs.com/) plugin that runs [stylelint](https://github.com/stylelint/stylelint) results through a list of reporters.
 
