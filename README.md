@@ -2,7 +2,6 @@
 
 [![NPM version](http://img.shields.io/npm/v/@ronilaukkarinen/gulp-stylelint.svg)](https://www.npmjs.org/package/@ronilaukkarinen/gulp-stylelint)
 [![Build Status](https://travis-ci.org/olegskl/gulp-stylelint.svg?branch=master)](https://travis-ci.org/ronilaukkarinen/gulp-stylelint)
-[![Dependency Status](https://david-dm.org/olegskl/gulp-stylelint.svg)](https://david-dm.org/ronilaukkarinen/gulp-stylelint)
 
 **This is an active fork of [olegskl/gulp-stylelint](https://github.com/olegskl/gulp-stylelint) which seems to have been sleeping for a long time.**
 
