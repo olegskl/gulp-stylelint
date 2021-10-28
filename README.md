@@ -3,7 +3,7 @@
 [![NPM version](http://img.shields.io/npm/v/@ronilaukkarinen/gulp-stylelint.svg)](https://www.npmjs.org/package/@ronilaukkarinen/gulp-stylelint)
 [![Build Status](https://travis-ci.org/olegskl/gulp-stylelint.svg?branch=master)](https://travis-ci.org/ronilaukkarinen/gulp-stylelint)
 
-**This is an active fork of [olegskl/gulp-stylelint](https://github.com/olegskl/gulp-stylelint) which seems to have been sleeping for a long time.**
+**This is a fork of [olegskl/gulp-stylelint](https://github.com/olegskl/gulp-stylelint) which seems to have been sleeping for a long time.**
 
 A [Gulp](http://gulpjs.com/) plugin that runs [stylelint](https://github.com/stylelint/stylelint) results through a list of reporters.
 
