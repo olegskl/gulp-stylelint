@@ -10,7 +10,7 @@ A [Gulp](http://gulpjs.com/) plugin that runs [stylelint](https://github.com/sty
 ## Installation
 
 ```bash
-npm install stylelint gulp-stylelint --save-dev
+npm install stylelint @ronilaukkarinen/gulp-stylelint --save-dev
 ```
 
 ## Quick start
