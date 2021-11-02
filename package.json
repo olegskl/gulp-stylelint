@@ -51,7 +51,7 @@
     "gulp-rename": "^2.0.0",
     "gulp-sourcemaps": "^3.0.0",
     "sinon": "^11.1.2",
-    "stylelint": "^13.0.0",
+    "stylelint": "^14.0.1",
     "tape": "^4.13.0"
   },
   "eslintConfig": {

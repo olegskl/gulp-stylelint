@@ -1,3 +1,7 @@
+### 14.0.5: 2021-11-02
+
+* Update devDependency of stylelint to 14.0.1
+
 ### 14.0.4: 2021-10-28
 
 * Release npm package @ronilaukkarinen/gulp-stylelint
