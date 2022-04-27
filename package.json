@@ -52,7 +52,7 @@
     "gulp-sourcemaps": "3.0.0",
     "sinon": "13.0.2",
     "stylelint": "13.13.1",
-    "tape": "4.15.1"
+    "tape": "5.5.3"
   },
   "eslintConfig": {
     "extends": [
