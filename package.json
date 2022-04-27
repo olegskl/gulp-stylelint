@@ -43,16 +43,16 @@
     "through2": "^3.0.1"
   },
   "devDependencies": {
-    "eslint": "^6.8.0",
-    "eslint-config-stylelint": "^11.1.0",
-    "gulp": "^4.0.2",
-    "gulp-clean-css": "^4.2.0",
-    "gulp-concat": "^2.6.1",
-    "gulp-rename": "^2.0.0",
-    "gulp-sourcemaps": "^2.6.5",
-    "sinon": "^8.1.1",
-    "stylelint": "^13.0.0",
-    "tape": "^4.13.0"
+    "eslint": "6.8.0",
+    "eslint-config-stylelint": "11.1.0",
+    "gulp": "4.0.2",
+    "gulp-clean-css": "4.3.0",
+    "gulp-concat": "2.6.1",
+    "gulp-rename": "2.0.0",
+    "gulp-sourcemaps": "2.6.5",
+    "sinon": "8.1.1",
+    "stylelint": "13.13.1",
+    "tape": "4.15.1"
   },
   "eslintConfig": {
     "extends": [
