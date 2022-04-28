@@ -1,0 +1,8 @@
+{
+  "extends": [
+    "stylelint"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 2017
+  }
+}
