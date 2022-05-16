@@ -3,5 +3,6 @@
     "extends": [
         "local>ashleycaselli/renovate-config:node"
     ],
-    "includeForks": true
+    "includeForks": true,
+    "baseBranches": ["master", "release"]
 }
