@@ -29,7 +29,7 @@
   },
   "homepage": "https://github.com/olegskl/gulp-stylelint",
   "engines": {
-    "node": ">=10.12.0"
+    "node": ">=14.18.1"
   },
   "peerDependencies": {
     "stylelint": "^14.0.1"
