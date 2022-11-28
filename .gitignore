@@ -15,3 +15,7 @@ pids
 
 # node-waf configuration
 .lock-wscript
+
+# JetBrains IDEs
+.idea/
+*.iml
